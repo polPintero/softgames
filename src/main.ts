@@ -7,11 +7,10 @@ const app = new Application();
 
 (async () => {
   await setup(app);
-  // const cardContainer: Container = preload(app);
-  const cards = new Card({ count: 3, app });
+  const cards = new Card({ count: 144, app });
   app.stage.addChild(cards.cardList);
   console.log(app);
-  const animationDuration = 3000;
+  const animationDuration = 2000;
   app.ticker.add((time) => {
     cards.animation(animationDuration, time);
   });

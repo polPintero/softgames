@@ -21,9 +21,13 @@ class Card {
     this.cardList = new Container();
     this.animationDuration = 0;
     this.sizeCard = 200;
+    this.animationCard = null;
     this.startPosition = { x: 0, y: 0 };
     this.wayAnimation = 'forward';
     this.pixelByMsX = 0;
+    this.pixelByMsY = 0;
+    this.skewStepY = 0;
+    this.scaleStep = 0;
 
     this.createListCards(count);
   }
@@ -100,7 +104,6 @@ class Card {
     this.animationCard.skew.set(0, 0);
     this.animationCard.scale.set(1, 1);
     this.animationCard = null;
-    // const lastChild = this.cardList.children. pop();
   }
 }
 
