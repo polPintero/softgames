@@ -16,7 +16,7 @@ class Card {
     this.isAnimationProcess = false;
     this.cardList = new Container();
     this.animationDuration = 0;
-    this.sizeCard = Math.min(this.app.screen.width / 3, 200);
+    this.sizeCard = Math.min(this.app.screen.width / 4, 200);
     this.animationCard = null;
     this.pixelByMsX = 0;
     this.shiftCard = 1.5;
@@ -30,7 +30,12 @@ class Card {
     const { sizeCard } = this;
     for (let i = 0; i < length; i++) {
       const pixiRect = new Graphics();
-      pixiRect.rect(centerX - sizeCard * 2, centerY - sizeCard / 2, sizeCard, sizeCard);
+      pixiRect.rect(
+        centerX - sizeCard / 2 - (sizeCard * this.shiftCard) / 2,
+        centerY - sizeCard / 2,
+        sizeCard,
+        sizeCard
+      );
       pixiRect.fill(getRandomColor());
       this.cardList.addChild(pixiRect);
     }
