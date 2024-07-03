@@ -8,12 +8,8 @@ class Card {
   animationDuration: number;
   sizeCard: number;
   animationCard: ContainerChild | null;
-  startPosition: { x: number; y: number };
   pixelByMsX: number;
-  pixelByMsY: number;
-  skewStepY: number;
-  scaleStep: number;
-  wayAnimation: 'forward' | 'back';
+  shiftCard: number;
 
   constructor({ count, app }: { count: number; app: Application }) {
     this.app = app;
@@ -22,12 +18,8 @@ class Card {
     this.animationDuration = 0;
     this.sizeCard = Math.min(this.app.screen.width / 3, 200);
     this.animationCard = null;
-    this.startPosition = { x: 0, y: 0 };
-    this.wayAnimation = 'forward';
     this.pixelByMsX = 0;
-    this.pixelByMsY = 0;
-    this.skewStepY = 0;
-    this.scaleStep = 0;
+    this.shiftCard = 1.5;
 
     this.createListCards(count);
   }
@@ -38,7 +30,7 @@ class Card {
     const { sizeCard } = this;
     for (let i = 0; i < length; i++) {
       const pixiRect = new Graphics();
-      pixiRect.rect(centerX - sizeCard / 2, centerY - sizeCard / 2, sizeCard, sizeCard);
+      pixiRect.rect(centerX - sizeCard * 2, centerY - sizeCard / 2, sizeCard, sizeCard);
       pixiRect.fill(getRandomColor());
       this.cardList.addChild(pixiRect);
     }
@@ -57,53 +49,25 @@ class Card {
     this.isAnimationProcess = true;
     this.animationDuration = duration;
     this.animationCard = this.cardList.children[this.cardList.children.length - 1];
-    this.pixelByMsX = (this.animationCard.width * 1.6) / (duration / 2);
-    const aspectRatio = this.app.screen.height  /this.app.screen.width
-    this.pixelByMsY = this.animationCard.height / (duration / Math.max(2, aspectRatio));
-    this.skewStepY = 0.75 / (duration / 2);
-    this.scaleStep = (1 - 0.92) / (duration / 2);
-    this.startPosition.x = this.animationCard.x;
-    this.startPosition.y = this.animationCard.y;
+    this.pixelByMsX = (this.animationCard.width * this.shiftCard) / duration;
   }
 
   processAnimation(time: Ticker): void {
-    const { animationCard, sizeCard } = this;
+    const { animationCard, sizeCard, shiftCard } = this;
     if (!animationCard) return;
     const stepX = time.deltaMS * this.pixelByMsX;
-    const stepY = time.deltaMS * this.pixelByMsY;
-    const skewStepX = 0;
-    const skewStepY = time.deltaMS * this.skewStepY;
-    const scaleStep = time.deltaMS * this.scaleStep;
+    animationCard.x += stepX;
 
-    if (this.wayAnimation === 'forward' && animationCard.x >= sizeCard * 1.6) {
-      const nextCard = this.cardList.children[this.cardList.children.length - 2];
-      nextCard.zIndex <= animationCard.zIndex - 1 ? (animationCard.zIndex -= 2) : animationCard.zIndex--;
-      this.wayAnimation = 'back';
-    }
-    if (this.wayAnimation === 'forward') {
-      animationCard.x += stepX;
-      animationCard.y -= stepY;
-      animationCard.scale.set(animationCard.scale.x - scaleStep);
-      animationCard.skew.set(animationCard.skew.x + skewStepX, animationCard.skew.y + skewStepY);
-    }
-    if (this.wayAnimation === 'back') {
-      animationCard.x -= stepX;
-      animationCard.y += stepY;
-      animationCard.scale.set(animationCard.scale.x + scaleStep);
-      animationCard.skew.set(animationCard.skew.x - skewStepX, animationCard.skew.y - skewStepY);
-      if (animationCard.x <= this.startPosition.x) this.stopAnimation();
-    }
+    if (animationCard.x >= sizeCard * shiftCard) this.stopAnimation();
   }
 
   stopAnimation() {
+    const { animationCard, sizeCard, shiftCard } = this;
     this.isAnimationProcess = false;
     this.animationDuration = 0;
-    this.wayAnimation = 'forward';
-    if (!this.animationCard) return;
-    this.animationCard.x = this.startPosition.x;
-    this.animationCard.y = this.startPosition.y;
-    this.animationCard.skew.set(0, 0);
-    this.animationCard.scale.set(1, 1);
+    if (!animationCard) return;
+    if (animationCard.x > sizeCard * shiftCard) animationCard.x = sizeCard * shiftCard;
+    animationCard.zIndex--;
     this.animationCard = null;
   }
 }

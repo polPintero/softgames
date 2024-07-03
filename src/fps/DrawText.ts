@@ -1,4 +1,4 @@
-import { Text, Application } from 'pixi.js';
+import { Text, Application, TextStyle } from 'pixi.js';
 
 class DrawText {
   app: Application;
@@ -24,12 +24,12 @@ class DrawText {
     }
   }
 
-  createStyles(): { fontFamily: string; fontSize: number; fill: string } {
-    return {
+  createStyles(): TextStyle {
+    return new TextStyle({
       fontFamily: this.fontFamily,
       fontSize: this.fontSize,
       fill: this.fill,
-    };
+    });
   }
 }
 
