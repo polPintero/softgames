@@ -1,7 +1,7 @@
-import './style.css';
-import { Application, Container, Texture, Sprite, PointData } from 'pixi.js';
+import './styles/style.css';
+import { Application } from 'pixi.js';
 import setup from './setup';
-import Card from './Card';
+import Card from './Cards/Card';
 
 const app = new Application();
 
