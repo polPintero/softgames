@@ -1,4 +1,4 @@
-import { Application, Graphics, Container, Ticker, ContainerChild, Sprite } from 'pixi.js';
+import { Application, Graphics, Container, Ticker, ContainerChild } from 'pixi.js';
 import getRandomColor from './getRandomColor';
 
 class Card {
@@ -20,7 +20,7 @@ class Card {
     this.isAnimationProcess = false;
     this.cardList = new Container();
     this.animationDuration = 0;
-    this.sizeCard = 200;
+    this.sizeCard = Math.min(this.app.screen.width / 3, 200);
     this.animationCard = null;
     this.startPosition = { x: 0, y: 0 };
     this.wayAnimation = 'forward';
@@ -58,7 +58,8 @@ class Card {
     this.animationDuration = duration;
     this.animationCard = this.cardList.children[this.cardList.children.length - 1];
     this.pixelByMsX = (this.animationCard.width * 1.6) / (duration / 2);
-    this.pixelByMsY = this.animationCard.height / (duration / 2);
+    const aspectRatio = this.app.screen.height  /this.app.screen.width
+    this.pixelByMsY = this.animationCard.height / (duration / Math.max(2, aspectRatio));
     this.skewStepY = 0.75 / (duration / 2);
     this.scaleStep = (1 - 0.92) / (duration / 2);
     this.startPosition.x = this.animationCard.x;
